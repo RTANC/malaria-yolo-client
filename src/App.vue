@@ -8,18 +8,11 @@
     <v-main style="background-color: #2E7D32;">
       <v-container grid-list-md fluid>
         <v-layout row wrap>
-          <v-flex xs6>
+          <v-flex xs12>
             <v-card>
               <v-card-text>
-                <v-file-input name="file" accept="image/png, image/jpeg" label="UPLOAD" truncate-length="15" color="green darken-4" show-size
-                  prepend-icon="mdi-image" light @change="handleUpload"></v-file-input>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs6>
-            <v-card>
-              <v-card-text>
-                <v-btn color="primary" @click="diagnosis">text</v-btn>
+                <v-file-input name="file" accept="image/png, image/jpeg" label="UPLOAD ภาพแผ่นฟิล์มเลือด" truncate-length="15" color="info" show-size
+                  prepend-icon="mdi-image" light @change="handleUpload" append-outer-icon="mdi-send-outline" @click:append-outer="diagnosis" :loading="loading"></v-file-input>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -27,13 +20,6 @@
             <v-card>
               <v-card-text>
                 <img id="preview" style="width: 100%;"/>
-              </v-card-text>
-            </v-card>
-          </v-flex>
-          <v-flex xs12>
-            <v-card>
-              <v-card-text>
-                <canvas id="myCanvas" style="width: 100%;"></canvas>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -49,11 +35,13 @@
 export default {
   name: 'App',
   data: () => ({
-    img: ''
+    file: null,
+    loading: false
   }),
   methods: {
     handleUpload (file) {
       if (file) {
+        this.file = file
         const prev = document.getElementById('preview')
         const reader = new FileReader()
 
@@ -65,10 +53,8 @@ export default {
       }
     },
     diagnosis () {
-      var canvas = document.getElementById('myCanvas')
-      var context = canvas.getContext('2d')
-      var img = document.getElementById('preview')
-      context.drawImage(img, 0, 0, 700, 700)
+      console.log(this.file)
+      this.loading = true
     }
   }
 }
