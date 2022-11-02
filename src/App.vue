@@ -12,7 +12,7 @@
             <v-card>
               <v-card-text>
                 <v-file-input name="file" accept="image/png, image/jpeg" label="UPLOAD ภาพแผ่นฟิล์มเลือด" truncate-length="15" color="info" show-size
-                  prepend-icon="mdi-image" light @change="handleUpload" append-outer-icon="mdi-send-outline" @click:append-outer="diagnosis" :loading="loading"></v-file-input>
+                  prepend-icon="mdi-image" light @change="handleUpload" append-outer-icon="mdi-send-outline" @click:append-outer="diagnosis" :loading="loading" :disabled="loading"></v-file-input>
               </v-card-text>
             </v-card>
           </v-flex>
@@ -31,12 +31,13 @@
 </template>
 
 <script>
-
+import axios from 'axios'
 export default {
   name: 'App',
   data: () => ({
     file: null,
-    loading: false
+    loading: false,
+    base64: ''
   }),
   methods: {
     handleUpload (file) {
@@ -52,9 +53,21 @@ export default {
         reader.readAsDataURL(file)
       }
     },
-    diagnosis () {
-      console.log(this.file)
-      this.loading = true
+    async diagnosis () {
+      try {
+        this.loading = true
+        const form = new FormData()
+        form.append('file', this.file)
+        // console.log(this.file)
+        const res = await axios.post('http://localhost:5000/malaria', form)
+        const prev = document.getElementById('preview')
+        prev.setAttribute('src', res.data.base64)
+        console.log(res.data)
+      } catch (error) {
+        console.log(error)
+      } finally {
+        this.loading = false
+      }
     }
   }
 }
