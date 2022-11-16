@@ -55,14 +55,16 @@ export default {
     },
     async diagnosis () {
       try {
-        this.loading = true
-        const form = new FormData()
-        form.append('file', this.file)
-        // console.log(this.file)
-        const res = await axios.post('http://localhost:5000/malaria', form)
-        const prev = document.getElementById('preview')
-        prev.setAttribute('src', res.data.base64)
-        console.log(res.data)
+        if (this.file) {
+          this.loading = true
+          const form = new FormData()
+          form.append('file', this.file)
+          // console.log(this.file)
+          const res = await axios.post('http://localhost:5000/malaria', form)
+          const prev = document.getElementById('preview')
+          prev.setAttribute('src', res.data.base64)
+          console.log(res.data)
+        }
       } catch (error) {
         console.log(error)
       } finally {
